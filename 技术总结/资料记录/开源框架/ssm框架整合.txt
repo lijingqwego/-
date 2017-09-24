@@ -1,0 +1,43 @@
+1.spring mvc:控制层的框架，写controller（action）
+2.mybatis：写持久层，主要数据库操作语句
+3.spring：整合框架，dao层，service层，整合Controller加载以及管理bean
+最简单和原始的SSM搭建步骤（没有融合后的工具架包）
+1.配置spring下文件
+application-dao.xml，用来整合mybatis
+开启包扫描（扫描各种注解）
+<context:annotation-config></context:annotation-config>
+引入链接数据库参数的配置文件
+配置数据源参数设置
+加载数据库链接工厂
+（加载mybatis主程序配置文件sqlMapConfig.xml，加载数据源）
+加载子配置文件（扫描数据库sql语句文件，加载数据工厂）
+2.配置mybatis文件
+sqlMapConfig.xml
+主要配置实体类包别名，用于映射查询结果
+<configuration>
+	<typeAliases>
+		<package name="cn.com.shop.pojo"/>
+	</typeAliases>
+</configuration>
+3.整合springmvc
+springmvc.xml
+开启扫描控制层
+加载注解驱动
+<mvc:annotation-driven></mvc:annotation-driven>
+加载视图解析器完成视图跳转
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	 	<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />
+		<property name="prefix" value="/WEB-INF/view/" />
+		<property name="suffix" value=".jsp" />
+</bean>
+4.配置application-service.xml
+开启扫描服务层
+<context:component-scan base-package="cn.com.shop.service"></context:component-scan>
+5.spring整合springmvc和mybatis
+web.xml
+配置项目路径
+配置首界面，欢迎界面
+配置前端控制器，引入spring架包，初始化springmvc，mubatis配置文件
+配置servlet-mapping
+配置过滤乱码
+6.最后配置日志文件

@@ -1,0 +1,79 @@
+﻿1.传递字符串，返回字符串
+	var datejosn={
+				"oldpassword":oldpassword,
+				"newpassword":newpassword
+			}
+		$.ajax({
+			type:"post",
+			url:"changePassword.action",
+			data:datejosn,
+			success:function(data){//返回json结果
+				var falog=data;
+				if(falog=="1"){
+					alert("更新密码成功");
+					self.location="ssm-title/loginOut.action";
+				}else if(falog=="0"){
+					alert("更新密码失败");
+				}else{
+					alert("原密码错误");
+				}
+			}
+			
+		});   
+2.传送数据有中文
+var user = {
+				subjectCode:subjectCode,
+				subjectName:subjectName,
+				classHour:classHour,
+				fatherSubject:fatherSubject,
+				subjectOrder:subjectOrder,
+				classContent:$("#classContent").val().trim(),
+				classTarget:$("#classTarget").val().trim(),
+	        };
+	        $.ajax({
+	            url:'insertSubject.action',
+	            contentType : "application/json;charset=utf-8",
+	            data:JSON.stringify(user),
+	            type:'post',
+	            success:function(msg){
+	            	alert(msg);
+	            	var message=msg;
+	            	if(message==1){
+	            		alert("添加成功");
+	            		self.location="showSubjects.action";
+	            	}else{
+	            		alert("添加失败");
+	            	}
+	            	
+	            }
+	             
+	        });
+	});
+
+
+4.返回有中文
+@RequestMapping(value = { "/ordermenu" },produces = "text/html;charset=UTF-8")
+	$("#select-mune2").change(function() {
+    	var menu=$("#select-mune2").val();
+    	var datejosn={subjectNo:menu,subjectOrder:"3"};
+        $.ajax({
+			type:"post",
+			url:"http://localhost:8080/ssm-title/subject/ordermenu.action",
+			data:datejosn,
+			success:function(data){//返回json结果
+				var jsons=JSON.parse(data);
+				$("#select-mune3").empty();
+				var opt1 = $("<option/>").text("三级菜单").attr("value", "-1"); 
+				$("#select-mune3").append(opt1);
+				$.each(jsons,function(index2,value2){ // 遍历Object数组 ，每个对象的值存放在value ，index2表示为第几个对象 
+					$.each(value2,function(index2,value){
+					// 根据自己的逻辑进行数据的处理 
+						var opt = $("<option/>").text(value.subjectName).attr("value", value.subjectNo);  
+	                    $("#select-mune3").append(opt); 
+				// TODO: 逻辑 
+					});
+				}); 
+			}
+			
+		});   
+    });

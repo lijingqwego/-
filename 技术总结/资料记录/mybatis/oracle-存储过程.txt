@@ -1,0 +1,15 @@
+1.调用存储过程（用select，update，delete都可）
+<insert id="insertByType" statementType="CALLABLE" parameterType="java.util.HashMap">
+  	 {call pk_exa_page_make.make_page_type(
+  	 	#{vo.examinationName,mode=IN,jdbcType=VARCHAR},
+  	 	#{vo.examinationContent,mode=IN,jdbcType=VARCHAR},
+  	 	#{vo.examinationType,mode=IN,jdbcType=DECIMAL},
+  	 	#{vo.subjectNo,mode=IN,jdbcType=DECIMAL},
+  	 	#{vo.examLength,mode=IN,jdbcType=DECIMAL},
+  	 	#{vo.singln,mode=IN,jdbcType=INTEGER},
+  	 	#{vo.multil,mode=IN,jdbcType=INTEGER},
+  	 	#{vo.decide,mode=IN,jdbcType=INTEGER},
+  	 	#{vo.username,mode=IN,jdbcType=VARCHAR},
+  	 	#{result0,mode=OUT,jdbcType=INTEGER}
+  	 	)} 
+  </insert>

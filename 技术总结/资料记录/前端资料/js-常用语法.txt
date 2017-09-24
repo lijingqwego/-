@@ -1,0 +1,20 @@
+1.根据id取值（没使用特殊前端框架）
+var examinationType=$("#examinationType").val();（select 下拉框）
+var questionsname=$("#questionsname").val().trim();（input text）
+var examLength=$("#examLength").val();（input number）
+var loginid=$("input[name='loginid']").val();（根据名字取值）
+var roles =$("input:radio[name='roellist']:checked").val();（单选框）
+$("input:checkbox[name='roellist']:checked").each(function() {
+        	authorityids += $(this).val() + "-";
+        });（多选框）
+if($("input:radio[name='"+fromkey+"']").length<1){
+				flast=false;
+				}（判断元素存在不）
+2.jquery- 显示-隐藏
+$("#div-mune3").hide();
+$("#div-mune3").show();
+3.表单操作
+$("#updateform")[0].reset();（表单重置）
+$("#updateform").submit();（表单提交）
+4.页面跳转
+self.location="ssm-title/product/showProducts.action";

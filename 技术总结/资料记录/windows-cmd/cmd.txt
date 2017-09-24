@@ -1,0 +1,14 @@
+1.查看本机ip（不是网络ip）
+ipconfig
+2.打开windows管理体系结构(WMI) 
+wmimgmt.msc
+3.写字板
+write
+4.远程连接
+mstsc
+5.查看端口占用
+netstat-ano
+具体查看
+nesstat -ano | findstr " "
+查看端口 进程
+tasklist | findstr ""

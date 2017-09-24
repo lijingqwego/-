@@ -1,0 +1,12 @@
+1.创建用户
+#sqlplus /nolog
+
+　　SQL> conn / as sysdba;
+
+　　SQL>create user username identified by password
+
+　　SQL> grant dba to username;
+
+　　SQL> conn username/password
+
+　　SQL> select * from user_sys_privs;

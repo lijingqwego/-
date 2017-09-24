@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+        <tiles-definitions>
+        <!-- 定义默认主页 -->       
+         <definition name="base.definition" template="/jsp/layout.jsp">
+            <put-attribute name="title" value="" />
+            <put-attribute name="header" value="/jsp/templet/header.jsp" />
+            <put-attribute name="menu" value="/jsp/templet/menu.jsp" />
+            <put-attribute name="body" value="/jsp/templet/content.jsp" />
+            <put-attribute name="footer" value="/jsp/templet/foot.jsp" />
+         </definition>
+        <!-- 账号信息 -->
+        <definition name="user.userList" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/user/userList.jsp" />
+         </definition>
+         <!-- 修改密码 -->
+         <definition name="user.ChangePassword" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/user/changPassword.jsp" />
+         </definition>
+         <!-- 添加用户 -->
+         <definition name="user.addUser" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/user/addUser.jsp" />
+         </definition>
+         <!-- 修改用户 -->
+         <definition name="user.updateUser" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/user/updateUser.jsp" />
+         </definition>
+         <!-- 修改昵称 -->
+         <definition name="user.changeUser" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/user/changeUser.jsp" />
+         </definition>
+         <!-- 关联 角色 -->
+         <definition name="user.userAndRole" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/user/userAndRole.jsp" />
+         </definition>
+         <!-- 角色信息 -->
+        <definition name="role.roleList" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/role/roleList.jsp" />
+         </definition>
+         <!-- 角色修改 -->
+         <definition name="role.updateRole" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/role/updateRole.jsp" />
+         </definition>
+         <!-- 添加角色 -->
+         <definition name="role.addRole" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/role/addRole.jsp" />
+         </definition>
+         <!-- 关联权限 -->
+         <definition name="role.roleAndAuthority" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/role/roleAndAuthority.jsp" />
+         </definition>
+         <!-- 权限信息 -->
+        <definition name="authority.authorityList" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/authority/authorityList.jsp" />
+         </definition>
+         <!-- 关联资源 -->
+         <definition name="authority.authorityAndResource" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/authority/authorityAndResource.jsp" />
+         </definition>
+         <!-- 权限修改 -->
+         <definition name="authority.updateAuthority" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/authority/updateAuthority.jsp" />
+         </definition>
+         <!-- 资源信息 -->
+        <definition name="resource.resourceList" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/resource/resourceList.jsp" />
+         </definition>
+         <!-- 资源修改 -->
+         <definition name="resource.updateResource" extends="base.definition">
+            <put-attribute name="body" value="/jsp/security/resource/updateResource.jsp" />
+         </definition>
+          <!-- 学生信息 -->
+         <definition name="student.studentList" extends="base.definition">
+            <put-attribute name="body" value="/jsp/information/student/studentList.jsp" />
+         </definition>
+         <!--  修改学生信息-->
+         <definition name="student.updateStudent" extends="base.definition">
+            <put-attribute name="body" value="/jsp/information/student/updateStudent.jsp" />
+         </definition>
+        <!--  课程信息-->
+         <definition name="product.productList" extends="base.definition">
+            <put-attribute name="body" value="/jsp/information/product/productList.jsp" />
+         </definition>
+          <!--  修改课程信息-->
+         <definition name="product.updateProduct" extends="base.definition">
+            <put-attribute name="body" value="/jsp/information/product/updateProduct.jsp" />
+         </definition>
+          <!-- 关联科目-->
+         <definition name="product.productAndSubject" extends="base.definition">
+            <put-attribute name="body" value="/jsp/information/product/productAndSubject.jsp" />
+         </definition>
+         <!-- 科目信息-->
+         <definition name="subject.subjectList" extends="base.definition">
+            <put-attribute name="body" value="/jsp/information/subject/subjectList.jsp" />
+         </definition>
+         <!-- 修改科目-->
+         <definition name="subject.updateSubject" extends="base.definition">
+            <put-attribute name="body" value="/jsp/information/subject/updateSubject.jsp" />
+         </definition>
+          <!-- 增加科目-->
+         <definition name="subject.toInsert" extends="base.definition">
+            <put-attribute name="body" value="/jsp/information/subject/addSubject.jsp" />
+         </definition>
+         <!-- 题库信息-->
+         <definition name="bank.bankList" extends="base.definition">
+            <put-attribute name="body" value="/jsp/exam/question/questionBank.jsp" />
+         </definition>
+         <!-- 题目分类-->
+         <definition name="bank.relation" extends="base.definition">
+            <put-attribute name="body" value="/jsp/exam/question/relation.jsp" />
+         </definition>
+          <!-- 题目入库-->
+         <definition name="question.toquestion" extends="base.definition">
+            <put-attribute name="body" value="/jsp/exam/question/question.jsp" />
+         </definition>
+         <!-- 查看试卷模板 -->
+         <definition name="page.pageList" extends="base.definition">
+            <put-attribute name="body" value="/jsp/exam/page/pageList.jsp" />
+         </definition>
+         <!-- 添加新的试卷 -->
+         <definition name="page.addPage" extends="base.definition">
+            <put-attribute name="body" value="/jsp/exam/page/addPage.jsp" />
+         </definition>
+         <!-- 选择考试科目 -->
+         <definition name="examtest.toTest" extends="base.definition">
+            <put-attribute name="body" value="/jsp/exam/examtest/toTest.jsp" />
+         </definition>
+         <!-- 开始答题 -->
+         <definition name="examtest.questionlist" template="/jsp/exam/examtest/questionlist.jsp" >
+         </definition>
+         <!-- 去查看分数 -->
+         <definition name="examintion.toScantron" extends="base.definition">
+            <put-attribute name="body" value="/jsp/exam/score/toScantron.jsp" />
+         </definition>
+         <!-- 显示分数 -->
+         <definition name="examintion.seeScantron" extends="base.definition">
+            <put-attribute name="body" value="/jsp/exam/score/scantron.jsp" />
+         </definition>
+          <!-- 退出登录-->
+    	<definition name="base.logout" template="/login.jsp">
+     	</definition>
+              
+     
+    <!-- ui页面案例模板 -->
+     <definition name="example.error403" extends="base.definition">
+        <put-attribute name="title" value="error403"/>
+        <put-attribute name="body" value="/jsp/example/error403.jsp"/>
+    </definition>
+    <definition name="example.error404" extends="base.definition">
+        <put-attribute name="title" value="error404"/>
+        <put-attribute name="body" value="/jsp/example/error404.jsp"/>
+    </definition>
+    <definition name="example.error405" extends="base.definition">
+        <put-attribute name="title" value="error405"/>
+        <put-attribute name="body" value="/jsp/example/error405.jsp"/>
+    </definition>
+    <definition name="example.error500" extends="base.definition">
+        <put-attribute name="title" value="error500"/>
+        <put-attribute name="body" value="/jsp/example/error500.jsp"/>
+    </definition>
+     <definition name="example.table" extends="base.definition">
+        <put-attribute name="title" value="table"/>
+        <put-attribute name="body" value="/jsp/example/table.jsp"/>
+    </definition>
+    <definition name="example.button_and_icons" extends="base.definition">
+        <put-attribute name="title" value="button_and_icons"/>
+        <put-attribute name="body" value="/jsp/example/button_and_icons.jsp"/>
+    </definition>
+    <definition name="example.gallery" extends="base.definition">
+        <put-attribute name="title" value="gallery"/>
+        <put-attribute name="body" value="/jsp/example/gallery.jsp"/>
+    </definition>
+      <definition name="example.form_common" extends="base.definition">
+        <put-attribute name="title" value="form_common"/>
+        <put-attribute name="body" value="/jsp/example/form_common.jsp"/>
+    </definition>
+      <definition name="example.form_validation" extends="base.definition">
+        <put-attribute name="title" value="form_validation"/>
+        <put-attribute name="body" value="/jsp/example/form_validation.jsp"/>
+    </definition>
+      <definition name="example.form_wizard" extends="base.definition">
+        <put-attribute name="title" value="form_wizard"/>
+        <put-attribute name="body" value="/jsp/example/form_wizard.jsp"/>
+    </definition>
+      <definition name="example.gridlayout" extends="base.definition">
+        <put-attribute name="title" value="gridlayout"/>
+        <put-attribute name="body" value="/jsp/example/gridlayout.jsp"/>
+    </definition>
+      <definition name="example.index_info" extends="base.definition">
+        <put-attribute name="title" value="index_info"/>
+        <put-attribute name="body" value="/jsp/example/index_info.jsp"/>
+    </definition>
+      <definition name="example.interface_elements" extends="base.definition">
+        <put-attribute name="title" value="interface_elements"/>
+        <put-attribute name="body" value="/jsp/example/interface_elements.jsp"/>
+    </definition>
+         
+        </tiles-definitions>

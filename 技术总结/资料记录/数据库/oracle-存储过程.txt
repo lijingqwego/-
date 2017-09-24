@@ -1,0 +1,122 @@
+存储过程：  procedure
+存储过程介绍:一般用于数据转换和查询报表时
+	     一段存储在数据库中实现某种特定功能的程序
+	     存储过程可以在其他编程语言中调用：java，vb等
+
+        作用:简化复杂的操作  
+             增加数据的独立性
+             提高安全性（可以进行权限设置） 
+             提高性能
+
+语法：create or replace procedure 存储过程名
+     （参数名 函数类型 参数类型）   --函数类型及in    out   in out
+                                    --参数类型不用定义长度
+      as|is
+      声明变量    变量类型          --声明变量不用定义长度
+      begin
+      end;
+      
+--创建一个无参的存储过程 
+例: create or replace procedure pro_djl
+    is
+    begin
+      DBMS_OUTPUT.PUT_LINE('这就是一个无参的存储过程');
+    END;
+删除: drop procedure pro_djl;
+
+调用:begin 
+       pro_djl();
+     end;
+     
+     在dos窗体中调用:
+     call pro_djl();
+     exec pro_djl();
+与函数的区别:函数有返回值，存储过程没有返回值，
+             但存储过程中也可以通过out参数改变参数的值
+             
+存储过程的运行1.在PL/SQL中 直接调用 存储过程名()
+              2.在sqlplus中使用call 存储过程名()
+              3.在dos命令窗口中使用exec 存储过程名()  （execute immediate）
+              
+查看存储过程脚本: select * from user_sources where name='存储过程名' order by line;
+
+变量 :=&值; 使用&可以输入值
+
+传递参数：
+位置传递
+名称传递      存储过程名(参数1 => 值1)
+组合传递
+
+存储过程中使用游标演示:
+     create or replace procedure pro_djl         --创建一个存储过程
+     is
+	cur_no emp_a.empno%type;                 --声明语句段
+	cur_name emp_a.ename%type;
+	cursor cur_emp                           --创建游标
+	is 
+	select emp_a.empno from emp_a;          
+	
+     begin
+       	open cur_emp;                            --打开游标
+     loop
+     	fetch cur_emp into cur_no;               --提取数据
+     	
+     	exit when cur_emp%notfound;              
+     	
+     	select emp_a.ename into cur_name 
+     	from emp_a where emp_a.empno = cur_no;
+     	
+    	if sql%found then                        --因为有select或DML语句可以使用静态游标
+      	   dbms_output.put_line('隐式游标打开');
+           dbms_output.put_line('员工名字'||cur_name);
+        end if;
+        
+     	for inx in                               --使用for in loop 循环 执行隐式游标
+       	   (select * from emp_a where emp_a.empno = cur_no)
+    	loop
+       	    dbms_output.put_line('职位'||inx.job);
+        end loop;
+        
+     end loop;
+     close cur_emp;
+     end;
+
+带参数的存储过程使用DML语句演示:
+     create or replace procedure pro_djl      --创建一个存储过程
+	(pro_no in emp_a.empno%type,          --声明参数及类型
+ 	 pro_name in emp_a.ename%type,
+	 pro_deptno in emp_a.deptno%type
+	)
+	is
+     begin
+        insert into emp_a(empno,ename,deptno) --执行插入数据
+        values(pro_no,pro_name,pro_deptno);
+        if sql%found then
+           DBMS_OUTPUT.PUT_LINE('隐式游标被触发');
+        end if;
+     end;
+     
+输入输出参数的存储过程演示:
+	create or replace procedure pro_djl      --创建存储过程
+	  (num1 in out number,                   --定义in out 参数
+	   num2 in out number)                   --输入输出参数
+	is
+	  v1 number;                             --声明参数
+	  v2 number;
+	begin
+ 	  v1 := num1 + num2;
+ 	  v2 := num1 * num2;
+ 	  num1 := v1;                            --输入输出参数可赋值
+ 	  num2 := v2; 
+	end;
+
+
+
+     declare
+ 	num1 number(100) :=&num1;                --输入参数要传入变量
+ 	num2 number :=&num2;
+     begin
+  	pro_djl(num1,num2);                      --在PQ/SQL调用存储过程
+  	dbms_output.put_line('num1：'||num1||    --值已改变
+  	'-----'||'num2'||num2);
+     end;

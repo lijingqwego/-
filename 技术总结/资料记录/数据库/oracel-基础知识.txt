@@ -1,0 +1,55 @@
+2.基础知识
+number（m，n）：m为数字总长度，n为小数点后几位
+date 默认格式：日月年
+long ：2gb blog：4gb 在一个表中最多也只能出现一列
+sql分类：DDL：create，alter ，drop
+DML： insert update delete
+DQL：select
+DCL：grant removke
+distanct 过滤重复的列 加* 为所有列都一样的才会被过滤
+3.单行函数：
+LOWER（列名|表达式）：该函数用于把字符转换成小写。
+UPPER（列名|表达式）：该函数用于把字符转换成大写
+INITCAP（列名|表达式）：该函数用于把每个字的头一个字符转换成大写，其余转换成小写。
+CONCAT（列名|表达式，列名|表达式）：该函数用于把第1个字符串和第2个字符串连接成一个字符串SUBSTR（列名|表达式，m，[n]）：该函数用于返回指定的子串，该子串从第m个字符开始，其长度为n。
+LENGTH（列名|表达式）：该函数用于返回列或表达式中字符串的长度
+INSTR（列名|表达式，‘字符串’，[m]，[n]）：该函数用于返回所给字符串的数字位置，m表示从第m个字符开始搜索，n表示所给字符串出现的次数，它们的默认值都为1
+REPLACE（正文表达式，要搜寻的字符串，替换字符串）：该函数用于在“正文表达式”中查找“要搜寻的字符串”，如果找到了就用“替换字符串”替代。
+ROUND（列名|表达式，n）：该函数将列名或表达式所表示的数值四舍五入到小数点的n位。
+
+TRUNC（列名|表达式，n）：该函数将列名或表达式所表示的数值取到小数点的后n位。
+
+MOD（m，n）：该函数将m除以n并取余数
+
+SYSDATE：系统日期函数，它返回当前的系统时间。
+4.聚合函数
+countp:返回记录的总数目
+max：列的最大值
+min：列的最小值
+avg：列的平均值
+sum：列的和
+分组，group by  having对分组后结果再过滤
+5.decode 函数
+select decode(条件,值1,返回值1,值2,返回值2,...值n,返回值n,缺省值)类似为switch 
+select decode(dir,1,0,1) from a1_interval
+dir 的值是1变为0，是0则变为1
+select sum(decode(性别，男，1，0）)，sum(decode(性别，女，1，0）) from 表取特殊要求的值
+select * from table_subject order by decode(subject_name, '语文', 1, '数学', 2, , '外语',3) 特定排序
+　SQL> select sname as stud_name,
+  2         sum(decode(subject,'English',fraction,null)) as English,
+  3         sum(decode(subject,'database',fraction,null)) as database,
+  4         sum(decode(subject,'Java',fraction,null)) as Java
+  5  from t
+  6  group by sname列转行
+6.表关联
+内关联;
+外关联：left（right） outer jion 左右顺序直接根据表名顺序定
+在oracle（+）表示表为匹配表
+7.表约束
+默认：default 非空：notnull 唯一：unipue  主键：primary key 检查：check（规定值范围） 外键：foreign key
+alter table 表名 add constraint 约束名  约束类型（列）
+ alter table person add constraint person_pid_pk primary key(pid);  
+     alter table person add constraint person_tel_uk unique(tel);  
+alter table person add constraint person_age_ck check(age between 0 and 150);  
+alter table book add constraint person_book_pid_fk foreign key(pid) references person(pid) on delete cascade;
+alter table 表名 modify (列名 ，NOT NULL|default)

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security.xsd">
+           <!-- 登录界面不需要先安全验证,也是对外的窗口 -->
+	<http pattern="/login.jsp" security="none"></http>
+	<!-- 注册流程免权限 -->
+	<http pattern="/tosign.jsp" security="none"></http>
+	<http pattern="/user/sign.action" security="none"></http>
+	<http pattern="/user/check.action" security="none"></http>
+	<!-- js不需要权限 -->
+	<http pattern="/js/**" security="none"></http>
+	<!-- 图片不需要权限 -->
+	<http pattern="/img/**" security="none"></http>
+	<!-- css不需要权限 -->
+	<http pattern="/css/**" security="none"></http>
+	<http pattern="/font-awesome/**" security="none"></http>
+	<!-- 设置auto-config 自动根据表达式配置过滤器，其实就是过滤器的执行顺序 -->
+	<http auto-config="true" use-expressions="true">
+	<!-- 配置登录界面上的信息-->
+	<form-login login-page="/login.jsp" login-processing-url="/login.action"
+		 default-target-url="/user/menu.action" 
+		 username-parameter="username" password-parameter="password"
+		 authentication-failure-url="/login.jsp" 
+		 />
+	 <logout invalidate-session="true"  
+      logout-success-url="/login.jsp"  
+      logout-url="/loginOut.action"/>  
+	 <!-- 权限验证不通过时进入的页面 -->
+	<access-denied-handler error-page="/loginfailure.jsp"/>
+	<!-- 只要是拥有权限的用户都可以访问的页面，过滤外界用户以及直接通过路径连接-->
+	<!-- 保证所有项目内部页面和请求都必须有权限，不存在无权限的游客进入 -->
+	<!-- 第一句过滤用户通过页面路径访问，下面是请求以及页面路径过滤 -->
+	 <intercept-url  pattern="/jsp/**" access="hasRole('ROLE_USER')"></intercept-url>
+	 <intercept-url  pattern="/user/**" access="hasRole('ROLE_USER')"></intercept-url>
+	 <intercept-url  pattern="/account/**" access="hasRole('ROLE_ACCOUNT')"></intercept-url>
+	 <intercept-url  pattern="/role/**" access="hasRole('ROLE_ROLE')"></intercept-url>
+	 <intercept-url  pattern="/authority/**" access="hasRole('ROLE_AUTHORITY')"></intercept-url>
+	 <intercept-url  pattern="/resource/**" access="hasRole('ROLE_AUTHORITY')"></intercept-url>
+	 <intercept-url  pattern="/student/**" access="hasRole('ROLE_STUDENT')"></intercept-url>
+	 <intercept-url  pattern="/class/**" access="hasRole('ROLE_CLASS')"></intercept-url>
+	 <intercept-url  pattern="/product/**" access="hasRole('ROLE_PRODUCT')"></intercept-url>
+	 <intercept-url  pattern="/subject/**" access="hasRole('ROLE_SUBJECT')"></intercept-url>
+	 <intercept-url  pattern="/question/**" access="hasRole('ROLE_QUESTION')"></intercept-url>
+	 <intercept-url  pattern="/bank/**" access="hasRole('ROLE_BANK')"></intercept-url>
+	 <intercept-url  pattern="/page/**" access="hasRole('ROLE_PAGE')"></intercept-url>
+	 <intercept-url  pattern="/exam/**" access="hasRole('ROLE_EXAM')"></intercept-url>
+	 <intercept-url  pattern="/examination/**" access="hasRole('ROLE_SEE')"></intercept-url>
+	</http>
+	<!-- 这个spring-security不需要通过controller来调用service完成登录账号密码验证，直接映射对应的服务层 -->
+	<authentication-manager>
+		<authentication-provider user-service-ref="authUserInfoService">
+			<password-encoder ref="passwordEncoder">
+		        <!-- 用户名做为盐值 -->
+                 <salt-source user-property="username"/>
+		    </password-encoder>
+		</authentication-provider>
+	</authentication-manager>
+</beans:beans>

@@ -1,0 +1,10 @@
+1.带参数
+ cursor c_examination_list(examinationno varchar2) is--遍历答题卡
+                  select * from t_examination_list where examination_info_no= examinationno order by question_num;
+ for vc_examination_list in c_examination_list(vc_examination_info_no) loop
+
+
+end loop;
+2.无参数
+	 cursor c_examination_list is--遍历答题卡
+                  select * from t_examination_list where examination_info_no='' order by question_num;

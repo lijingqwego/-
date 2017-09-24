@@ -1,0 +1,123 @@
+1.导包
+2.配置spring-security 具体的拦截过滤设置
+不拦截的，一般用于资源文件和项目对游客的接口
+<http pattern="/login.jsp" security="none"></http>
+<!-- js不需要权限 -->
+<http pattern="/js/**" security="none"></http>
+<!-- 设置auto-config 自动根据表达式配置过滤器，其实就是过滤器的执行顺序 -->
+	<http auto-config="true" use-expressions="true">
+	<!-- 配置登录界面上的信息-->
+	<form-login login-page="/login.jsp" login-processing-url="/login.action"
+		 default-target-url="/login/menu.action" <!-- 登录验证后调整的请求-->
+		 username-parameter="username" password-parameter="password"
+		 authentication-failure-url="/login.jsp" 
+		 />
+		 <!-- 退出时的响应 -->
+	 <logout invalidate-session="true"  
+      logout-success-url="/login.jsp"  
+      logout-url="/loginOut.action"/>  
+	 <!-- 权限验证不通过时进入的页面 -->
+	<access-denied-handler error-page="/loginfailure.jsp"/>
+	<!-- 具体规定谁有权访问什么页面-->
+	 <intercept-url  pattern="/login/**" access="hasRole('ROLE_USER')"></intercept-url>
+	 <!--定义用于登录判断的服务层，这个框架的登录操作无需配置控制层，内部已经配置好了-->
+	 <authentication-manager>
+		<authentication-provider user-service-ref="authUserInfoService">
+		</authentication-provider>
+	</authentication-manager>
+3.在web.xml配置加载
+ <!-- 定义一个监听器
+  	配置初始化参数
+   -->
+	 <!-- 所有的资源都需要经过spring 安全 ，需要将spring 的过滤器写的dispathcher之前-->	
+	<filter>
+	  <filter-name>springSecurityFilterChain</filter-name>
+	  <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	
+	<filter-mapping>
+	  <filter-name>springSecurityFilterChain</filter-name>
+	  <url-pattern>/*</url-pattern>
+	  <!--加载具体配置文件-->
+	</filter-mapping>
+		<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<context-param>
+	 	<param-name>contextConfigLocation</param-name>
+	 	<param-value>classpath:spring/application-*.xml,classpath:springsecurity/springsecurity.xml,classpath:spring_tiles/application-*.xml</param-value>
+    </context-param>
+4.配置登录和权限验证用的实体类
+实现该接口implements UserDetails
+/**
+	 * 获取用户所具有的单权限。
+	 */
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		//创建一个集合
+		List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+		//应该向集合中添加数据
+		GrantedAuthority ga = new SimpleGrantedAuthority(this.roleCode);
+		list.add(ga);
+		return list;
+	}
+	用户多权限
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+		//向list中添加权限。
+		for (int i = 0; i < rolelist.size(); i++) {
+			GrantedAuthority ga = new SimpleGrantedAuthority(rolelist.get(i).getRolecode());
+			list.add(ga);
+			
+		}
+		return list ; 
+	}
+5.服务层
+implements UserDetailsService
+@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		UserInfoCustom userInfo = this.userInfoMapper.findUserInfoByName(username);
+		String userid=userInfo.getId();
+		System.out.println(userInfo.getPassword());
+		if(userInfo.getPassword()!=null){
+			//根据用户名查询到了用户 
+			//需要根据id来查询权限
+			List<RoleList> list = userInfoMapper.findUserRoleListByUserId(userid);
+			userInfo.setRolelist(list);
+			for(RoleList role : list){
+				System.out.println(role.getRolecode());
+			}
+		}
+		return userInfo;
+	}
+6.重写密码验证
+重新配置密码验证方式
+<authentication-manager>
+		<authentication-provider user-service-ref="authUserInfoService">
+			<password-encoder ref="passwordEncoder">
+		        <!-- 用户名做为盐值 -->
+                 <salt-source user-property="username"/>
+		    </password-encoder>
+		</authentication-provider>
+	</authentication-manager>
+	加载密码验证类
+	<bean id="passwordEncoder"
+   		class="cn.com.user.security.rewrite.MyMessageDigestPasswordEncoder" >
+   		<constructor-arg value="md5"></constructor-arg>
+   	</bean>
+	实现类需要继承父类验证
+	class MyMessageDigestPasswordEncoder extends MessageDigestPasswordEncoder
+	重写验证方法
+	@Override
+	public boolean isPasswordValid(String encPass, String rawPass,Object salt){
+		String pass1 = "" + encPass;
+		String username=(String) salt;
+		String pass2 = MD5Util.md5_SystemWideSaltSource(rawPass, username);//自己写的加密方式
+		boolean bool=false;
+		if(pass1.equals(pass2)){
+			bool=true;
+		}
+		return bool;
+	}
+	最后重写MD5Util.md5_SystemWideSaltSource这个密码加密的具体实现模式

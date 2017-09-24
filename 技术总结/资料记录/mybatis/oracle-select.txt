@@ -1,0 +1,108 @@
+﻿1.多表查询，定义resultMap（无法直接映射已存在的实体）
+<resultMap type="orders" id="orders_lazy_user">
+		<!-- id表示的是唯一标识 -->
+		<id column="id" property="id"/>
+		<result column="user_id" property="user_id"/>
+		表一对一查询映射使用的标签
+		<association property="userInfo" javaType="userInfo">
+			<id column="uids" property="id" />
+			<result column="username" property="username"/>
+		</association>
+		表一对多使用的标签
+		 <collection property="orderDetail" ofType="orderDetail">
+		 	<id column="did" property="id"/>
+		 	<result column="items_id" property="items_id"/>
+		 </collection>
+</resultMap>
+内关联
+ <select id="findOrderDetailAndUserList" resultMap="orderdetail_and_user_map">
+	 	select o.* ,u.username,u.id uids,u.sex,u.address,d.id did ,d.items_id,d.items_num from orders o ,userinfo u ,
+orderdetail d
+where o.user_id = u.id and d.orders_id = o.id
+	 </select>
+	 
+	 
+2.查询时把某列关联结果定义新的一列
+<resultMap type="cn.com.user.pojo.UserAndRole" id="resultRoleAndUser">
+  	 <id column="ROLEID" jdbcType="VARCHAR" property="roleid" />
+	 <result column="ROLENAME" jdbcType="VARCHAR" property="rolename" />
+	 <result column="DESCN" jdbcType="VARCHAR" property="descn" />
+	 <result column="ISFLOG" jdbcType="VARCHAR" property="userid"/>
+  </resultMap>
+  
+<select id="userAndRole" parameterType="java.lang.String" resultMap="resultRoleAndUser">
+  	select r.ROLEID,r.ROLENAME,r.DESCN,nvl((select roleid from p_um_user_role um
+		where um.userid =#{userid,jdbcType=VARCHAR}  and um.roleid = r.roleid
+		),1) isflog from p_um_role r where r.enabled=1
+</select>
+3.分页查询
+<select id="findBySearch" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+  	SELECT * FROM 
+  	( SELECT A.*, ROWNUM RN FROM 
+	  	( select <include refid="Base_Column_List" />
+		  	from P_UM_USER 
+		  	<where>
+		  		<if test="loginid !=null and loginid !=''">
+		  			and loginid like concat(concat('%',#{loginid}),'%')
+		  		</if>
+		  		<if test="username !=null and username !=''">
+		  			and username like concat(concat('%',#{username}),'%')
+		  		</if>
+		  		and userflag=1
+		  	</where>
+		 ) A WHERE ROWNUM &lt;= #{endnum}
+	) WHERE RN &gt;= #{startnum}
+  </select>
+ 
+4.查重或者返回结果条数
+<select id="check" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+  	 select count(*) from P_UM_USER
+  	 where USERID = #{userid,jdbcType=VARCHAR} 
+  	 and LOGINID = #{loginid,jdbcType=VARCHAR}
+  	 and userflag=1
+  </select>
+5.子查询
+<select id="findUserRoleListByUserId" parameterType="java.lang.String" resultMap="roleResultMap">
+	  	select C.AUTHORITYID,C.CODE FROM P_UM_AUTHORITY C where C.ENABLED=1 and C.AUTHORITYID IN(SELECT B.AUTHORITYID FROM P_UM_ROLE_AUTHORITY B
+     WHERE B.ROLEID IN(SELECT A.ROLEID FROM P_UM_USER_ROLE A WHERE A.USERID=#{userid})) 
+	 </select>
+:in()适合内表比外数据小的情况（子查询返回结果少或子查询表数据少）
+
+
+<select id="findRelation" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+	select <include refid="Base_Column_List" />
+	    from T_EXA_QUESTION_DETAILED t
+	    where not exists(select question_id from t_exa_questions where question_id=t.question_no) 
+		    <if test="questionname != null and questionname !=''">
+		    	and question_name like concat(concat('%',#{questionname}),'%')
+		    </if>
+		    <if test="questiontype != null and questiontype !=''">
+		    	and question_type =#{questiontype,jdbcType=DECIMAL}
+		    </if>
+  </select>
+  
+  结论:exists()适合内表比外表数据大的情况（子查询返回结果多或子查询表数据多）
+  
+  
+6.延迟加载查询
+<resultMap type="orders" id="orders_lazy_user">
+		<!-- id表示的是唯一标识 -->
+		<id column="id" property="id"/>
+		<result column="user_id" property="user_id"/>
+		<association property="userInfo" javaType="userInfo" 		select="cn.com.demo.mapper.UserInfoMapper.findUserInfoById" column="user_id">
+		</association>
+</resultMap>
+	<!-- 延迟加载只能使用resultMap -->
+	<select id="findOrderAndUserLazyLoad" resultMap="orders_lazy_user">
+		select * from orders
+	</select>
+延迟加载需要在mybatis配置文件中开启
+<!-- 开启延迟加载 -->
+	<settings>
+		<!-- 是否可以用延迟加载 -->
+		<setting name="lazyLoadingEnabled" value="true"/>
+		<setting name="aggressiveLazyLoading" value="false"/>
+	</settings>
+  
+
+  

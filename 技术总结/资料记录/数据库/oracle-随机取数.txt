@@ -1,0 +1,53 @@
+例子（看语法不如看例子）
+    --从表 zs_xj_family 中“全表扫描”随机抽取20%的记录，再从中随机查询5条记录
+    SELECT   *
+      FROM   zs_xj_family SAMPLE (20)
+     WHERE   ROWNUM <= 5;
+ 
+    -- 从表 zs_xj_family 中“采样表扫描”随机抽取10%的记录，再从中随机查询5条记录
+    SELECT   *
+      FROM   zs_xj_family SAMPLE BLOCK (10)
+     WHERE   ROWNUM <= 5;
+
+    --使用seed，返回固定的结果集。
+    SELECT   *
+      FROM   zs_xj_family SAMPLE (10) SEED (3)
+     WHERE   ROWNUM <= 5
+
+    SELECT   *
+      FROM   zs_xj_family SAMPLE BLOCK (10) SEED (11)
+     WHERE   ROWNUM <= 5; 
+
+
+
+2、获取随机记录
+    SELECT   *
+      FROM   (  SELECT   *
+                  FROM   zs_family
+                 where is_test=1
+              ORDER BY   DBMS_RANDOM.VALUE)
+     WHERE   ROWNUM <= 3
+
+    SELECT   *
+      FROM   (  SELECT   *
+                  FROM   zs_family
+                 where is_test=1
+              ORDER BY   DBMS_RANDOM.VALUE(1,3))
+     WHERE   ROWNUM <= 3
+
+    SELECT   *
+      FROM   (  SELECT   *
+                  FROM   zs_family
+                 WHERE   is_dxx = 1 AND is_test = 1
+              ORDER BY   DBMS_RANDOM.random)
+     WHERE   ROWNUM <= 3
+
+
+3）使用内部函数sys_guid()
+
+    SELECT   *
+      FROM   (  SELECT   *
+                  FROM   zs_family
+                 WHERE   is_test = 1
+              ORDER BY   sys_guid())
+     WHERE   ROWNUM <= 3

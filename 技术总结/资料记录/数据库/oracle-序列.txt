@@ -1,0 +1,24 @@
+//解释
+
+{
+
+Create Sequence 序列名称
+Increment by 步长
+Stat with 1 开始值
+Maxvalue  最大值
+Minvalue  最小值
+
+ 
+Cycle 循环 nocycle 不循环
+Cache 缓存   Cache<maxvalue-minvalue/increment by//一般不采用缓存
+Nextvalue 下一个
+Currval 当前值
+}
+
+Create sequence seq_cdpt
+Increment by 1
+Start with 1
+Maxvalue 999999
+Minvalue 1
+Nocycle
+nocache

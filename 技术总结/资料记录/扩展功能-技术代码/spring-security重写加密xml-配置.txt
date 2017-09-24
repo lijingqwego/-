@@ -1,0 +1,13 @@
+1.配置重写盐值加密
+<bean id="passwordEncoder"
+   		class="cn.com.user.security.rewrite.MyMessageDigestPasswordEncoder" >
+   		<constructor-arg value="md5"></constructor-arg>
+</bean>
+<authentication-manager>
+		<authentication-provider user-service-ref="authUserInfoService">
+			<password-encoder ref="passwordEncoder">
+		        <!-- 用户名做为盐值 -->
+                 <salt-source user-property="username"/>
+		    </password-encoder>
+		</authentication-provider>
+	</authentication-manager>

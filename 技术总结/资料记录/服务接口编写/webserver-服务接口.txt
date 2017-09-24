@@ -1,0 +1,23 @@
+最简单的模型搭建
+服务接口搭建：
+1.导包
+2.创建一个使用@WebService注解的类，下面有几个个接受外面请求的方法
+3.发布本服务，JaxWsServerFactoryBean开源框架（ServerFactoryBean jdk自带的） 实例化一个对象，按顺序设置发布地址setAddress("http://192.168.1.90:92/service");
+设置发布的服务类setServiceClass(JavaWsWebService.class);
+设置服务类实例化对象setServiceBean(new JavaWsWebService());
+生成服务create();
+客户端链接接口：
+1.对项目创建一个web server client 输入“http://192.168.1.90:92/service?wsdl”
+自动生成相应的工具类
+2.先生成一个链接服务接口的类
+JavaWsWebServiceService service= new JavaWsWebServiceServiceLocator();
+在实例化一个端口服务类
+JavaWsWebService hs=service.getJavaWsWebServicePort();
+通过端口服务类调用服务展示给外界的方法业务hs.getJosn("query", "3");（getjson方法为服务提供对外接口，里面参数是实现本服务对接需要的数据）
+常用注解
+1.@WebMethod（operationName="queryPojo",exclude=true）
+operationName 直接指定接口对外展示的方法名（类似于别名）     
+exclude 用于设置该接口是否可以被外界看到，默认为false
+2.@WebResult（name="returnWord"） 指定接口的返回值
+3.@WebParam（name="cityName"）指定接口的参数
+
